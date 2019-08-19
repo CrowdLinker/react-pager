@@ -1,12 +1,12 @@
 {
-  "name": "react-pager-component",
+  "name": "@crowdlinker/react-pager",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "module": "dist/react-pager-component.esm.js",
+  "module": "dist/react-pager.esm.js",
   "author": "andrew smith",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ajsmth/react-native-pager-component"
+    "url": "git+https://github.com/ajsmth/react-pager.git"
   },
   "license": "ISC",
   "typings": "dist/index.d.ts",
@@ -49,5 +49,17 @@
   "dependencies": {
     "react-spring": "^8.0.27",
     "react-use-gesture": "^5.2.4"
-  }
+  },
+  "description": "simple react pager component",
+  "bugs": {
+    "url": "https://github.com/ajsmth/react-pager/issues"
+  },
+  "homepage": "https://github.com/ajsmth/react-pager#readme",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "keywords": [
+    "react"
+  ]
 }
