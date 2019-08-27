@@ -1,25 +1,24 @@
-import 'react-app-polyfill/ie11';
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import { Pager } from '../.'
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { Pager } from '../.';
 
-const { useState, useEffect } = React
+const { useState } = React;
 
-const PAGE_SIZE = 350
+const PAGE_SIZE = 350;
 
 const children = Array.from({ length: 100000 }).map((c, i) => (
   <h4 key={i} style={{ textAlign: 'center' }}>
     Index {i}
   </h4>
-))
+));
 
 // this will represent a consumer component or any part of your application
 function App() {
   // all we need to pass are children and an activeIndex prop to our pager component
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0);
 
   function handleChange(index) {
-    setActiveIndex(index)
+    setActiveIndex(index);
   }
 
   return (
@@ -47,7 +46,7 @@ function App() {
             margin: 'auto',
           }}
         >
-          <Pager adjacentChildOffset={1} initialIndex={4000}>
+          <Pager adjacentChildOffset={2} initialIndex={4000}>
             {children}
           </Pager>
         </div>
@@ -59,22 +58,22 @@ function App() {
         <div style={{ height: 250, overflow: 'hidden' }}>
           <Pager>
             <FeaturedThumbnail
-              title='Pourquoi Julie?'
-              subtitle='QUB raido et RECreation'
+              title="Pourquoi Julie?"
+              subtitle="QUB raido et RECreation"
               color={colors[1]}
               size={150}
             />
 
             <FeaturedThumbnail
-              title='This Is Uncomfortable'
-              subtitle='How  money messes with life'
+              title="This Is Uncomfortable"
+              subtitle="How  money messes with life"
               color={colors[3]}
               size={150}
             />
 
             <FeaturedThumbnail
-              title='Overheard at National Geographic'
-              subtitle='Curious stories of a big, beautiful wor...'
+              title="Overheard at National Geographic"
+              subtitle="Curious stories of a big, beautiful wor..."
               color={colors[2]}
               size={150}
             />
@@ -86,10 +85,15 @@ function App() {
         <h2 style={{ padding: '0 5px' }}>New & Noteworthy</h2>
 
         <PagerContainer height={PAGE_SIZE}>
-          <Pager pageSize={0.5} maxIndex={Math.round(thumbnails.length / 2)}>
+          <Pager pageSize={0.5} maxIndex={3} initialIndex={1}>
             <ThumbnailContainer>
-              {thumbnails.map(t => (
-                <Thumbnail {...t} size={100} basis={50} />
+              {Array.from({ length: 8 }).map((t, i) => (
+                <Thumbnail
+                  {...t}
+                  size={100}
+                  basis={50}
+                  color={colors[i % colors.length]}
+                />
               ))}
             </ThumbnailContainer>
           </Pager>
@@ -100,10 +104,15 @@ function App() {
         <h2 style={{ padding: '0 5px' }}>Savor Summer</h2>
 
         <PagerContainer height={150}>
-          <Pager pageSize={0.75} max={thumbnails.length - 1}>
+          <Pager pageSize={0.75} maxIndex={thumbnails.length - 1}>
             <ThumbnailContainer>
-              {thumbnails.map(t => (
-                <Thumbnail {...t} size={100} basis={75} />
+              {Array.from({ length: 10 }).map((t, i) => (
+                <Thumbnail
+                  {...t}
+                  size={100}
+                  basis={75}
+                  color={colors[i % colors.length]}
+                />
               ))}
             </ThumbnailContainer>
           </Pager>
@@ -114,18 +123,23 @@ function App() {
         <h2 style={{ padding: '0 5px' }}>Shows We Love</h2>
 
         <PagerContainer height={150}>
-          <Pager max={thumbnails.length - 1}>
-            {thumbnails.map(t => (
-              <Thumbnail {...t} size={100} basis={100} />
+          <Pager>
+            {Array.from({ length: 8 }).map((t, i) => (
+              <Thumbnail
+                {...t}
+                size={100}
+                basis={100}
+                color={colors[i % colors.length]}
+              />
             ))}
           </Pager>
         </PagerContainer>
       </div>
     </div>
-  )
+  );
 }
 
-const THUMBNAIL_SIZE = 150
+const THUMBNAIL_SIZE = 150;
 
 function PagerContainer({ children, height }) {
   return (
@@ -139,7 +153,7 @@ function PagerContainer({ children, height }) {
     >
       {children}
     </div>
-  )
+  );
 }
 
 function ThumbnailContainer({ children }) {
@@ -154,18 +168,18 @@ function ThumbnailContainer({ children }) {
     >
       {children}
     </div>
-  )
+  );
 }
 
-function FeaturedThumbnail({ title, subtitle, color, size }) {
+function FeaturedThumbnail({ color, size }) {
   return (
     <div style={{ flexBasis: '100%', width: '100%' }}>
       <div style={{ padding: '5px' }}>
         <strong style={{ fontSize: 13, color: 'purple', margin: 0 }}>
           FEATURED
         </strong>
-        <h4 style={{ margin: 0 }}>{title}</h4>
-        <p style={{ color: 'gray', margin: 0 }}>{subtitle}</p>
+        <TextBar width={150} />
+        <TextBar width={200} />
 
         <div
           style={{
@@ -178,16 +192,10 @@ function FeaturedThumbnail({ title, subtitle, color, size }) {
         />
       </div>
     </div>
-  )
+  );
 }
 
-function Thumbnail({
-  title,
-  subtitle,
-  color,
-  size = THUMBNAIL_SIZE,
-  basis = 100,
-}) {
+function Thumbnail({ color, size = THUMBNAIL_SIZE, basis = 100 }) {
   return (
     <div
       style={{
@@ -204,11 +212,25 @@ function Thumbnail({
             borderRadius: '4px',
           }}
         />
-        <p style={{ fontWeight: 'bold', margin: 0 }}>{title}</p>
-        <small style={{ margin: 0 }}>{subtitle}</small>
+        <TextBar width={'50%'} />
+        <TextBar width={'75%'} />
       </div>
     </div>
-  )
+  );
+}
+
+function TextBar({ width }) {
+  return (
+    <div
+      style={{
+        height: 2,
+        margin: '15px 0',
+        background: 'lightgrey',
+        borderRadius: 4,
+        width,
+      }}
+    />
+  );
 }
 
 const colors = [
@@ -217,7 +239,7 @@ const colors = [
   'rgba(238, 229, 233, 1)',
   'rgba(214, 73, 51, 1)',
   'rgba(43, 48, 58, 1)',
-]
+];
 
 const thumbnails = [
   {
@@ -268,6 +290,6 @@ const thumbnails = [
     subtitle: 'CBC Podcasts',
     color: colors[2],
   },
-]
+];
 
 ReactDOM.render(<App />, document.getElementById('root'));

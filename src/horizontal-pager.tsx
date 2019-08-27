@@ -51,6 +51,7 @@ function HorizontalPager({
     // the velocity of the drag -- important to track to prevent jank after user releases
     const [vx] = vxvy;
 
+
     // we want the value to immediate update w/ a user drag event, not spring to the value
     set({ dragX: x, immediate: true });
 
@@ -75,23 +76,28 @@ function HorizontalPager({
         set({ dragX: 0, immediate: false });
       } else {
         // determine the next position based on the drag value (left or right)
-
         let nextOffset = offset;
 
-        if (x > dragThreshold && activeIndex - indexChange >= minIndex) {
-          // transition to previous page
-          nextOffset = offset + indexChange;
+        if (x > dragThreshold) {
+          // clamp change to minimum index value
+          const clampedMin = Math.max(minIndex, activeIndex - indexChange);
+
+          // offset will be the opposite value of the next index
+          nextOffset = -clampedMin;
 
           // update our controller component w/ the previous index
-          onChange(activeIndex - indexChange);
+          onChange(clampedMin);
         }
 
-        if (x < dragThreshold && activeIndex + indexChange <= maxIndex) {
-          // transition to next page
-          nextOffset = offset - indexChange;
+        if (x < dragThreshold) {
+          // clamp change to maximum index value
+          const clampedMax = Math.min(maxIndex, activeIndex + indexChange);
+
+          // offset will be the opposite value of the next index
+          nextOffset = -clampedMax;
 
           // update our controller component w/ the next index
-          onChange(activeIndex + indexChange);
+          onChange(clampedMax);
         }
 
         // start spring transition to next position
