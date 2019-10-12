@@ -2,7 +2,7 @@ import * as React from 'react';
 import { animated } from 'react-spring';
 import { useOnFocus } from '../../src';
 
-const colors = [
+export const colors = [
   'aquamarine',
   'coral',
   'gold',
@@ -28,6 +28,7 @@ function Slide({ children, index }) {
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
+        margin: '10px',
       }}
     >
       {children}

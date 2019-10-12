@@ -43,6 +43,7 @@ interface PagerProps {
     next?: number;
     prev?: number;
   };
+  style?: any;
   pageInterpolation: iInterpolationConfig;
   gestureOptions: Partial<GestureConfig>;
 }
@@ -70,6 +71,7 @@ function Pager({
   },
   pageInterpolation = {},
   gestureOptions,
+  style,
 }: Partial<PagerProps>) {
   if (clamp.next === undefined) {
     clamp.next = BIG_NUMBER;
@@ -238,14 +240,19 @@ function Pager({
   return (
     <animated.div
       {...bind()}
-      style={{ position: 'relative', height: '100%', width: '100%' }}
+      style={{
+        position: 'relative',
+        height: '100%',
+        width: '100%',
+        ...style,
+      }}
     >
       <animated.div
-        ref={containerRef}
         style={{
           position: 'relative',
           height: '100%',
           width: '100%',
+          display: 'flex',
           willChange: 'transform',
           transform: interpolate(
             [index],
@@ -253,31 +260,33 @@ function Pager({
           ),
         }}
       >
-        {React.Children.map(adjacentChildren, (element: any, i: number) => {
-          // compute offset of child based on adjacentChildOffset and index
-          let position = i;
+        <animated.div style={{ display: 'flex', flex: 1 }} ref={containerRef}>
+          {React.Children.map(adjacentChildren, (element: any, i: number) => {
+            // compute offset of child based on adjacentChildOffset and index
+            let position = i;
 
-          if (adjacentChildOffset !== undefined) {
-            position =
-              activeIndex <= adjacentChildOffset
-                ? i
-                : activeIndex - adjacentChildOffset + i;
-          }
+            if (adjacentChildOffset !== undefined) {
+              position =
+                activeIndex <= adjacentChildOffset
+                  ? i
+                  : activeIndex - adjacentChildOffset + i;
+            }
 
-          return (
-            <IndexProvider index={position}>
-              <Page
-                index={position}
-                minimum={minimum}
-                maximum={maximum}
-                pageInterpolation={pageInterpolation}
-                targetTransform={targetTransform}
-              >
-                {element}
-              </Page>
-            </IndexProvider>
-          );
-        })}
+            return (
+              <IndexProvider index={position}>
+                <Page
+                  index={position}
+                  minimum={minimum}
+                  maximum={maximum}
+                  pageInterpolation={pageInterpolation}
+                  targetTransform={targetTransform}
+                >
+                  {element}
+                </Page>
+              </IndexProvider>
+            );
+          })}
+        </animated.div>
       </animated.div>
     </animated.div>
   );
@@ -546,4 +555,5 @@ export {
   useInterpolate,
   useFocus,
   useOnFocus,
+  IndexProvider,
 };

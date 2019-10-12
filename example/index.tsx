@@ -5,10 +5,11 @@ import { PagerProvider } from '../src';
 import { Slide } from './src/shared-components';
 import { StackedCards } from './src/stacked-cards';
 import { KilterCards } from './src/kilter-cards';
+import { Tabs } from './src/tabs';
 
 const { useState } = React;
 
-const children = Array.from({ length: 1000 }).map((c, i) => (
+const children = Array.from({ length: 5 }).map((c, i) => (
   <Slide index={i} key={i}>
     <h4 style={{ textAlign: 'center', margin: 0 }}>Index {i}</h4>
   </Slide>
@@ -42,7 +43,7 @@ function App() {
           }}
         >
           <PagerProvider activeIndex={activeIndex} onChange={onChange}>
-            <KilterCards>{children}</KilterCards>
+            <Tabs>{children}</Tabs>
           </PagerProvider>
         </div>
       </div>

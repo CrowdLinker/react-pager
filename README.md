@@ -4,7 +4,7 @@ A fully controllable, high performance pager for React
 
 <p align="center" style="display: flex; justify-content: center; align-items:center;">
   <img src="assets/kilter-cards-web.gif" width="300px"  style="margin: 0 10px"/>
-  <img src="assets/stacked-cards-web.gif" width="300px"  style="margin: 0 10px"/>
+  <img src="assets/tabs-web.gif" width="300px"  style="margin: 0 10px"/>
 </p>
 
 ### Install
@@ -113,7 +113,6 @@ function MySlide(props) {
     transform: [
       {
         scale: {
-          unit: 'px',
           range: [-1, 0, 1],
           output: [0.9, 1, 0.9],
           extrapolate: 'clamp',
