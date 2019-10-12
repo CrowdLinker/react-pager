@@ -9,9 +9,11 @@ A fully controllable, high performance pager for React
 
 ### Install
 
-`bash yarn add @crowdlinker/react-pager`
+`yarn add @crowdlinker/react-pager`
 
 ### Example
+
+[CodeSandbox](https://codesandbox.io/s/floral-rgb-rko24)
 
 ```javascript
 import React, { useState } from 'react';
@@ -36,8 +38,10 @@ function MyPager() {
 
 ### API Reference
 
-```
-import { Pager } from '@crowdlinker/react-pager'
+### Pager
+
+```typescript
+import { Pager } from '@crowdlinker/react-pager';
 
 interface PagerProps {
   type: 'horizontal' | 'vertical';
@@ -60,6 +64,19 @@ interface PagerProps {
   };
   pageInterpolation: iInterpolationConfig;
   gestureOptions: Partial<GestureConfig>;
+}
+```
+
+### PagerProvider
+
+```typescript
+import { PagerProvider } from '@crowdlinker/react-pager';
+
+interface iPagerProvider {
+  children: React.ReactNode;
+  initialIndex?: number;
+  activeIndex?: number;
+  onChange?: (next: number) => void;
 }
 ```
 
