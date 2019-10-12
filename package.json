@@ -44,10 +44,10 @@
     "react-dom": "^16.9.0",
     "tsdx": "^0.8.0",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "typescript": "3.6.2"
   },
   "dependencies": {
-    "react-spring": "^8.0.27",
+    "react-spring": "^9.0.0-beta.34",
     "react-use-gesture": "^5.2.4"
   },
   "description": "simple react pager component",
