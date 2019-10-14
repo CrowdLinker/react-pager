@@ -30,7 +30,7 @@ function App() {
           display: 'flex',
           margin: '0 auto',
           justifyContent: 'center',
-          overflow: 'hidden',
+          // overflow: 'hidden',
           padding: 20,
         }}
       >

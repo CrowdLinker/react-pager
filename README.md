@@ -80,6 +80,40 @@ interface iPagerProvider {
 }
 ```
 
+### Pagination
+
+```typescript
+import { Pagination } from '@crowdlinker/react-pager';
+
+interface iPagination {
+  children: React.ReactNode[];
+  pageInterpolation: iInterpolationConfig;
+  style?: any;
+}
+```
+
+### Slider
+
+```typescript
+import { Slider } from '@crowdlinker/react-pager';
+
+interface iSlider {
+  style: any;
+  numberOfScreens: number;
+}
+```
+
+### Progress
+
+```typescript
+import { Progress } from '@crowdlinker/react-pager';
+
+interface iProgress {
+  style: any;
+  numberOfScreens: number;
+}
+```
+
 # Hooks
 
 There are a number of useful hooks you can use in your screens when you wrap `<Pager />` in a `<PagerProvider />`
@@ -90,6 +124,7 @@ There are a number of useful hooks you can use in your screens when you wrap `<P
   useOnFocus(fn) -> fn() to fire on screen focus
   useOffset() -> the animatedIndex of the page relative to the activeIndex
   useInterpolation(interpolationConfig) -> interpolated style object
+  useJumpTo() -> (nextIndex: number) => void -> jump to index without animation
 ```
 
 ### What is animatedIndex?

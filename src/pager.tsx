@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   useSpring,
   animated,
-  interpolate,
   to,
   SpringValue,
   SpringUpdateFn,
@@ -94,7 +93,7 @@ function Pager({
   const isControlled = parentIndex !== undefined;
 
   const pagerContext = useContext(PagerContext);
-  const springContext = useContext(SpringContext);
+  const springContext = useContext(ValueContext);
 
   // create our own internal activeIndex to manage when uncontrolled
   const [_activeIndex, setActiveIndex] = useState(initialIndex);
@@ -221,7 +220,7 @@ function Pager({
 
   const minimum = useMemo(
     () =>
-      interpolate([index], index => {
+      index.to(index => {
         // @ts-ignore
         return index - clamp.prev;
       }),
@@ -230,12 +229,14 @@ function Pager({
 
   const maximum = useMemo(
     () =>
-      interpolate([index], index => {
+      index.to(index => {
         // @ts-ignore
         return index + clamp.next;
       }),
     [clamp.next, index]
   );
+
+  const interpolation = useRef(pageInterpolation).current;
 
   return (
     <animated.div
@@ -254,8 +255,7 @@ function Pager({
           width: '100%',
           display: 'flex',
           willChange: 'transform',
-          transform: interpolate(
-            [index],
+          transform: index.to(
             index => `${targetTransform}(calc(${index * 100 * pageSize * -1}%))`
           ),
         }}
@@ -278,7 +278,7 @@ function Pager({
                   index={position}
                   minimum={minimum}
                   maximum={maximum}
-                  pageInterpolation={pageInterpolation}
+                  pageInterpolation={interpolation}
                   targetTransform={targetTransform}
                 >
                   {element}
@@ -301,7 +301,7 @@ interface iPage {
   targetTransform: 'translateY' | 'translateX';
 }
 
-function _Page({
+function Page({
   children,
   index,
   minimum,
@@ -324,7 +324,7 @@ function _Page({
         willChange: 'transform',
         ...absoluteFill,
         zIndex: zIndex,
-        transform: interpolate([minimum, maximum], (minimum, maximum) => {
+        transform: to([minimum, maximum], (minimum, maximum) => {
           const clamped = minMax(index, minimum, maximum);
           return `${targetTransform}(${clamped * 100}%)`;
         }),
@@ -343,8 +343,6 @@ function _Page({
   );
 }
 
-const Page = React.memo(_Page);
-
 function minMax(value: number, minimum: number, maximum: number) {
   return Math.min(Math.max(value, minimum), maximum);
 }
@@ -360,10 +358,8 @@ const absoluteFill: any = {
 type iPagerContext = [number, (next: number) => void];
 const PagerContext = React.createContext<undefined | iPagerContext>(undefined);
 
-type iSpringContext = [SpringValue<number>, SpringUpdateFn<{ index: number }>];
-const SpringContext = React.createContext<undefined | iSpringContext>(
-  undefined
-);
+type iValueContext = [SpringValue<number>, SpringUpdateFn<{ index: number }>];
+const ValueContext = React.createContext<undefined | iValueContext>(undefined);
 
 interface iPagerProvider {
   children: React.ReactNode;
@@ -388,13 +384,13 @@ function PagerProvider({
   const [{ index }, set] = useSpring(() => ({ index: activeIndex }));
 
   const pagerContext = [activeIndex, onChange] as iPagerContext;
-  const springContext = [index, set] as iSpringContext;
+  const valueContext = [index, set] as iValueContext;
 
   return (
     <PagerContext.Provider value={pagerContext}>
-      <SpringContext.Provider value={springContext}>
+      <ValueContext.Provider value={valueContext}>
         {children}
-      </SpringContext.Provider>
+      </ValueContext.Provider>
     </PagerContext.Provider>
   );
 }
@@ -449,13 +445,11 @@ function useOnFocus(fn: Function) {
   }, [focused]);
 }
 
-function useSpringContext(): iSpringContext {
-  const context = useContext(SpringContext);
+function useValue(): iValueContext {
+  const context = useContext(ValueContext);
 
   if (context === undefined) {
-    throw new Error(
-      `useSpringContext() must be used within a <SpringProvider />`
-    );
+    throw new Error(`useValue() must be used within a <ValueProvider />`);
   }
 
   return context;
@@ -463,9 +457,9 @@ function useSpringContext(): iSpringContext {
 
 function useOffset() {
   const index = useIndex();
-  const [_index] = useSpringContext();
+  const [value] = useValue();
 
-  return _index.interpolate((i: number) => index - i);
+  return value.to((i: number) => index - i);
 }
 
 function useInterpolate(config: iInterpolationConfig) {
@@ -522,7 +516,7 @@ function interpolateWithConfig(
 
         transformUnits.push(unit);
 
-        return offset.interpolate(rest);
+        return offset.to(rest);
       });
 
       const transformStyle = to(result, (...values) =>
@@ -538,13 +532,29 @@ function interpolateWithConfig(
     // e.g opacity: { range, output => -1 -> 0.1}
     else if (typeof prop === 'object') {
       style[key] = offset
-        .interpolate(prop)
+        .to(prop)
         // @ts-ignore
-        .interpolate(val => `${val}`);
+        .to(val => `${val}`);
     }
   }
 
   return style;
+}
+
+type JumpToFn = (nextIndex: number) => void;
+
+function useJumpTo(): JumpToFn {
+  const [, onChange] = usePager();
+  const [, set] = useValue();
+
+  return function(nextIndex: number) {
+    set({
+      index: nextIndex,
+      immediate: true,
+    });
+
+    onChange(nextIndex);
+  };
 }
 
 export {
@@ -555,5 +565,7 @@ export {
   useInterpolate,
   useFocus,
   useOnFocus,
+  useValue,
+  useJumpTo,
   IndexProvider,
 };
