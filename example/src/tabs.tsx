@@ -7,6 +7,7 @@ import {
   Slider,
   Progress,
   useJumpTo,
+  iPagerRef,
 } from '../../src';
 import { colors } from './shared-components';
 
@@ -25,11 +26,18 @@ const paginationConfig: iInterpolationConfig = {
 function Tabs({ children }) {
   const [activeIndex] = usePager();
 
+  const pager = React.useRef<iPagerRef | null>(null);
   const activeColor = colors[activeIndex % colors.length];
+
+  function jump(next: number) {
+    if (pager.current !== null) {
+      pager.current.jumpTo(next);
+    }
+  }
 
   return (
     <>
-      <Pager minIndex={-1} style={{ overflow: 'hidden' }}>
+      <Pager style={{ overflow: 'hidden' }} ref={pager}>
         {children}
       </Pager>
 
@@ -40,7 +48,7 @@ function Tabs({ children }) {
 
       <Pagination pageInterpolation={paginationConfig}>
         {React.Children.map(children, (_, index) => (
-          <Circle index={index} />
+          <Circle index={index} jump={jump} />
         ))}
       </Pagination>
 
@@ -52,14 +60,13 @@ function Tabs({ children }) {
   );
 }
 
-function Circle({ index }: { index: number }) {
+function Circle({ index, jump }: { index: number }) {
   const [, onChange] = usePager();
-  const jumpTo = useJumpTo();
 
   return (
     <div style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
       <button
-        onClick={() => jumpTo(index)}
+        onClick={() => jump(index)}
         style={{
           width: 20,
           height: 20,
