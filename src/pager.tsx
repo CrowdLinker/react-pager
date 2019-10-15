@@ -209,6 +209,7 @@ const Pager = forwardRef<iPagerRef, Partial<PagerProps>>(
     useEffect(() => {
       set({
         index: activeIndex,
+        immediate: false,
       });
     }, [activeIndex]);
 
@@ -335,7 +336,11 @@ function Page({
   const interpolatedStyles = interpolateWithConfig(offset, pageInterpolation);
 
   // @ts-ignore
-  let { zIndex = -index, ...rest } = interpolatedStyles;
+  let { zIndex = 0, ...rest } = interpolatedStyles;
+
+  if (children && children.props.zIndex) {
+    zIndex = children.props.zIndex;
+  }
 
   return (
     <animated.div
