@@ -1,24 +1,17 @@
 import * as React from 'react';
-import {
-  useSpring,
-  animated,
-  to,
-  SpringValue,
-  SpringUpdateFn,
-} from 'react-spring';
+import { useSpring, animated, interpolate } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import { GestureConfig } from 'react-use-gesture/dist/types';
 
-// Remove this once this issue is resolved: https://github.com/react-spring/react-spring/issues/613
-declare module 'react-spring' {
-  export const animated: any;
-}
+// @ts-ignore
+type SpringValue<T> = any;
+// @ts-ignore
+type SpringUpdateFn<T> = any;
 
 const {
   useState,
   useEffect,
   useRef,
-  useLayoutEffect,
   useContext,
   useMemo,
   forwardRef,
@@ -131,7 +124,7 @@ const Pager = forwardRef<iPagerRef, Partial<PagerProps>>(
     const [width, setWidth] = useState(1);
     const [height, setHeight] = useState(1);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       const { clientWidth = 1, clientHeight = 1 } = containerRef.current as any;
       if (clientWidth !== width) {
         setWidth(clientWidth);
@@ -230,7 +223,7 @@ const Pager = forwardRef<iPagerRef, Partial<PagerProps>>(
 
     const minimum = useMemo(
       () =>
-        index.to(index => {
+        index.interpolate((index: number) => {
           // @ts-ignore
           return index - clamp.prev;
         }),
@@ -239,7 +232,7 @@ const Pager = forwardRef<iPagerRef, Partial<PagerProps>>(
 
     const maximum = useMemo(
       () =>
-        index.to(index => {
+        index.interpolate((index: number) => {
           // @ts-ignore
           return index + clamp.next;
         }),
@@ -278,13 +271,16 @@ const Pager = forwardRef<iPagerRef, Partial<PagerProps>>(
             width: '100%',
             display: 'flex',
             willChange: 'transform',
-            transform: index.to(
-              index =>
+            transform: index.interpolate(
+              (index: number) =>
                 `${targetTransform}(calc(${index * 100 * pageSize * -1}%))`
             ),
           }}
         >
-          <animated.div style={{ display: 'flex', flex: 1 }} ref={containerRef}>
+          <animated.div
+            style={{ display: 'flex', flex: 1 }}
+            ref={containerRef as any}
+          >
             {React.Children.map(adjacentChildren, (element: any, i: number) => {
               // compute offset of child based on adjacentChildOffset and index
               let position = i;
@@ -349,7 +345,7 @@ function Page({
         willChange: 'transform',
         ...absoluteFill,
         zIndex: zIndex,
-        transform: to([minimum, maximum], (minimum, maximum) => {
+        transform: interpolate([minimum, maximum], (minimum, maximum) => {
           const clamped = minMax(index, minimum, maximum);
           return `${targetTransform}(${clamped * 100}%)`;
         }),
@@ -484,7 +480,7 @@ function useOffset() {
   const index = useIndex();
   const [value] = useValue();
 
-  return value.to((i: number) => index - i);
+  return value.interpolate((i: number) => index - i);
 }
 
 function useInterpolate(config: iInterpolationConfig) {
@@ -541,10 +537,10 @@ function interpolateWithConfig(
 
         transformUnits.push(unit);
 
-        return offset.to(rest);
+        return offset.interpolate(rest);
       });
 
-      const transformStyle = to(result, (...values) =>
+      const transformStyle = interpolate(result, (...values) =>
         values
           .map((value, index) => {
             return `${transformProps[index]}(${value}${transformUnits[index]})`;
@@ -557,9 +553,9 @@ function interpolateWithConfig(
     // e.g opacity: { range, output => -1 -> 0.1}
     else if (typeof prop === 'object') {
       style[key] = offset
-        .to(prop)
+        .interpolate(prop)
         // @ts-ignore
-        .to(val => `${val}`);
+        .interpolate(val => `${val}`);
     }
   }
 

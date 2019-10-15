@@ -47,7 +47,7 @@
     "typescript": "3.6.2"
   },
   "dependencies": {
-    "react-spring": "^9.0.0-beta.34",
+    "react-spring": "^8.0.27",
     "react-use-gesture": "^5.2.4"
   },
   "description": "simple react pager component",

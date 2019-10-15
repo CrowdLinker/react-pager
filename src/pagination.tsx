@@ -48,7 +48,9 @@ function Slider({ style, numberOfScreens }: iSlider) {
   const [value] = useValue();
 
   const width = 100 / numberOfScreens;
-  const offset = value.to((index: number) => `translateX(${index * 100}%)`);
+  const offset = value.interpolate(
+    (index: number) => `translateX(${index * 100}%)`
+  );
 
   return (
     <animated.div
@@ -69,7 +71,9 @@ interface iProgress {
 
 function Progress({ style, numberOfScreens }: iProgress) {
   const [value] = useValue();
-  const width = value.to(index => `${((index + 1) / numberOfScreens) * 100}%`);
+  const width = value.interpolate(
+    (index: number) => `${((index + 1) / numberOfScreens) * 100}%`
+  );
 
   return <animated.div style={{ width, ...style }} />;
 }
