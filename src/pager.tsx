@@ -557,6 +557,19 @@ function useJumpTo(): JumpToFn {
   };
 }
 
+type iUseRoutes = [string, (route: string) => void];
+
+function useRoutes(routes: string[]): iUseRoutes {
+  const [activeIndex, onChange] = usePager();
+
+  function navigate(route: string) {
+    const nextIndex = routes.indexOf(route);
+    onChange(nextIndex);
+  }
+
+  return [routes[activeIndex], navigate];
+}
+
 export {
   Pager,
   PagerProvider,
@@ -568,4 +581,5 @@ export {
   useValue,
   useJumpTo,
   IndexProvider,
+  useRoutes,
 };

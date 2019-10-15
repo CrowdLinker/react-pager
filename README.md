@@ -125,6 +125,7 @@ There are a number of useful hooks you can use in your screens when you wrap `<P
   useOffset() -> the animatedIndex of the page relative to the activeIndex
   useInterpolation(interpolationConfig) -> interpolated style object
   useJumpTo() -> (nextIndex: number) => void -> jump to index without animation
+  useRoutes(routes: string[]): [activeRoute, changeByRoute] -> maps indices to strings
 ```
 
 ### What is animatedIndex?

@@ -6,6 +6,7 @@ import { Slide } from './src/shared-components';
 import { StackedCards } from './src/stacked-cards';
 import { KilterCards } from './src/kilter-cards';
 import { Tabs } from './src/tabs';
+import { Routes } from './src/routes';
 
 const { useState } = React;
 
@@ -48,39 +49,41 @@ function App() {
         </div>
       </div>
 
-      <h2 style={{ textAlign: 'center' }}>Active Index: {activeIndex}</h2>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div
-          style={{
-            width: 300,
-            justifyContent: 'space-between',
-            display: 'flex',
-          }}
-        >
-          <button
+      <div style={{ margin: 50 }}>
+        <h2 style={{ textAlign: 'center' }}>Active Index: {activeIndex}</h2>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div
             style={{
-              height: 50,
-              width: 100,
-              border: 'thin solid black',
-              borderRadius: 10,
-              background: 'transparent',
+              width: 300,
+              justifyContent: 'space-between',
+              display: 'flex',
             }}
-            onClick={() => onChange(activeIndex - 1)}
           >
-            {'<'}
-          </button>
-          <button
-            style={{
-              height: 50,
-              width: 100,
-              border: 'thin solid black',
-              borderRadius: 10,
-              background: 'transparent',
-            }}
-            onClick={() => onChange(activeIndex + 1)}
-          >
-            {'>'}
-          </button>
+            <button
+              style={{
+                height: 50,
+                width: 100,
+                border: 'thin solid black',
+                borderRadius: 10,
+                background: 'transparent',
+              }}
+              onClick={() => onChange(activeIndex - 1)}
+            >
+              {'<'}
+            </button>
+            <button
+              style={{
+                height: 50,
+                width: 100,
+                border: 'thin solid black',
+                borderRadius: 10,
+                background: 'transparent',
+              }}
+              onClick={() => onChange(activeIndex + 1)}
+            >
+              {'>'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
