@@ -336,11 +336,7 @@ function Page({
   const interpolatedStyles = interpolateWithConfig(offset, pageInterpolation);
 
   // @ts-ignore
-  let { zIndex = 0, ...rest } = interpolatedStyles;
-
-  if (children && children.props.zIndex) {
-    zIndex = children.props.zIndex;
-  }
+  let { zIndex = 1, ...rest } = interpolatedStyles;
 
   return (
     <animated.div
