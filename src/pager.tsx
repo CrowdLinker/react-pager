@@ -299,6 +299,7 @@ const Pager = forwardRef<iPagerRef, Partial<PagerProps>>(
                     index={position}
                     minimum={minimum}
                     maximum={maximum}
+                    animatedIndex={index}
                     pageInterpolation={interpolation}
                     targetTransform={targetTransform}
                   >
@@ -319,6 +320,7 @@ interface iPage {
   index: number;
   minimum: SpringValue<number>;
   maximum: SpringValue<number>;
+  animatedIndex: SpringValue<number>;
   pageInterpolation: iInterpolationConfig;
   targetTransform: 'translateY' | 'translateX';
 }
@@ -328,11 +330,11 @@ function Page({
   index,
   minimum,
   maximum,
+  animatedIndex,
   pageInterpolation,
   targetTransform,
 }: iPage) {
-  const offset = useOffset();
-
+  const offset = animatedIndex.interpolate((i: number) => index - i);
   const interpolatedStyles = interpolateWithConfig(offset, pageInterpolation);
 
   // @ts-ignore
@@ -604,4 +606,5 @@ export {
   useJumpTo,
   IndexProvider,
   useRoutes,
+  useIndex,
 };
